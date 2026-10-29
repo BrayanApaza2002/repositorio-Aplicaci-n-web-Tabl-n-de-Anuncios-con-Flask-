@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<h2 class="mb-4">Tablón de Anuncios</h2>
+
+{% if anuncios %}
+  {% for anuncio in anuncios %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ anuncio.titulo }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                {{ anuncio.categoria.nombre }} — {{ anuncio.autor.nombre }}
+                | {{ anuncio.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+            </h6>
+            <p class="card-text">{{ anuncio.contenido }}</p>
+            
+            {% if session.usuario_id == anuncio.usuario_id or session.es_admin %}
+              <a href="{{ url_for('anuncios.editar', id=anuncio.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <a href="{{ url_for('anuncios.eliminar', id=anuncio.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar?')">Eliminar</a>
+            {% endif %}
+        </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p class="text-muted">No hay anuncios publicados aún.</p>
+{% endif %}
+
+{% endblock %}
